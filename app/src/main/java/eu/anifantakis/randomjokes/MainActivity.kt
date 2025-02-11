@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -21,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import eu.anifantakis.randomjokes.screens.FavoriteJokesScreen
-import eu.anifantakis.randomjokes.screens.RandomJokeScreen
+import eu.anifantakis.randomjokes.screens.RandomJokesScreen
 import eu.anifantakis.randomjokes.ui.theme.RandomJokesTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +53,7 @@ fun RandomJokesApp(modifier: Modifier = Modifier) {
                 startDestination = "random",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("random") { RandomJokeScreen() }
+                composable("random") { RandomJokesScreen() }
                 composable("favorites") { FavoriteJokesScreen() }
             }
         }
@@ -63,7 +64,7 @@ fun RandomJokesApp(modifier: Modifier = Modifier) {
 fun BottomNavigationBar(navController: NavHostController) {
     NavigationBar {
         NavigationBarItem(
-            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Jokes") },
+            icon = { Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Jokes") },
             label = { Text("Jokes") },
             selected = currentRoute(navController) == "random",
             onClick = { navController.navigate("random") }

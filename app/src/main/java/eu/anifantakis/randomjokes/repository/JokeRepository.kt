@@ -7,4 +7,5 @@ interface JokeRepository {
     suspend fun fetchAndStoreRandomJokes(): List<Joke>
     fun getCachedJokes(): Flow<List<Joke>>
     suspend fun markAsFavorite(joke: Joke)
+    suspend fun markAsNotFavorite(joke: Joke)
 }

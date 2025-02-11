@@ -4,7 +4,7 @@ import androidx.room.Room
 import eu.anifantakis.randomjokes.database.AppDatabase
 import eu.anifantakis.randomjokes.repository.JokeRepository
 import eu.anifantakis.randomjokes.repository.JokeRepositoryImpl
-import eu.anifantakis.randomjokes.screens.JokeViewModel
+import eu.anifantakis.randomjokes.screens.JokesViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -22,7 +22,7 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    //  Ktor HttpClient
+    //  Injecting Ktor HttpClient Singleton
     single {
         HttpClient(CIO) {
             install(Logging) {
@@ -38,7 +38,7 @@ val appModule = module {
         }
     }
 
-    // Database DI
+    // Injecting Database Singleton
     single {
         Room.databaseBuilder(
             androidApplication(),
@@ -46,10 +46,11 @@ val appModule = module {
             "jokes_database.db"
         ).build()
     }
-    single { get<AppDatabase>().jokeDao }
+    single { get<AppDatabase>().jokeDao } // Injecting DAO Singleton
 
-    // Repository
+    // Injecting Repository Singleton
     singleOf(::JokeRepositoryImpl).bind<JokeRepository>()
 
-    viewModelOf(::JokeViewModel)
+    // Injecting ViewModels
+    viewModelOf(::JokesViewModel)
 }

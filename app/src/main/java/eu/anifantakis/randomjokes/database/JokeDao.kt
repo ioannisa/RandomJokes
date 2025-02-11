@@ -26,12 +26,6 @@ interface JokeDao {
     @Query("DELETE FROM Joke")
     suspend fun deleteAllJokes()
 
-    @Query("SELECT COUNT(*) FROM Joke WHERE isFavorite = 0")
-    suspend fun getNonFavoriteCount(): Int
-
-    @Query("DELETE FROM Joke WHERE uid IN (SELECT uid FROM Joke WHERE isFavorite = 0 ORDER BY fetchedAt ASC LIMIT :excess)")
-    suspend fun deleteOldNonFavoriteJokes(excess: Int)
-
     @Query("DELETE FROM Joke WHERE isFavorite = 0")
     suspend fun deleteNonFavoriteJokes()
 }

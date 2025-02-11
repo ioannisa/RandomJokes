@@ -37,4 +37,9 @@ class JokeRepositoryImpl(
         val updated = joke.copy(isFavorite = true)
         jokeDao.upsertJoke(updated)
     }
+
+    override suspend fun markAsNotFavorite(joke: Joke) = withContext(Dispatchers.IO) {
+        val updated = joke.copy(isFavorite = false)
+        jokeDao.upsertJoke(updated)
+    }
 }
