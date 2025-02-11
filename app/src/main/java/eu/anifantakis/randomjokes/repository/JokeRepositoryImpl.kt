@@ -17,15 +17,17 @@ class JokeRepositoryImpl(
     private val baseUrl = "https://official-joke-api.appspot.com/"
 
     override suspend fun fetchAndStoreRandomJokes(): List<Joke> = withContext(Dispatchers.IO) {
-        // Fetch list of jokes from the remote /random_ten endpoint
+        // Fetch jokes from the /random_ten endpoint
         val jokes: List<Joke> = client.get {
             url {
                 takeFrom(baseUrl)
                 encodedPath = "random_ten"
             }
         }.body()
-        // Save (upsert) the jokes into the database
-        jokeDao.upsertJokes(jokes = jokes)
+        // Delete all cached jokes that are not favorites
+        jokeDao.deleteNonFavoriteJokes()
+        // Insert the newly fetched jokes into the cache
+        jokeDao.upsertJokes(jokes)
         jokes
     }
 
