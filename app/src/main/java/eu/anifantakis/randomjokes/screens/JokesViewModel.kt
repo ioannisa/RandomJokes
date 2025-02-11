@@ -29,6 +29,9 @@ class JokesViewModel(
         list.filter { !it.isFavorite }
     }
 
+    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
         viewModelScope.launch {
             repository.getCachedJokes().collect { jokesList ->
@@ -39,7 +42,14 @@ class JokesViewModel(
 
     fun refreshJokes() {
         viewModelScope.launch {
-            repository.fetchAndStoreRandomJokes()
+            _isLoading.value = true  // start loading
+            try {
+                repository.fetchAndStoreRandomJokes()
+            } catch (e: Exception) {
+                // Optionally handle or log the error here
+            } finally {
+                _isLoading.value = false  // loading finished (either success or error)
+            }
         }
     }
 

@@ -14,11 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import eu.anifantakis.randomjokes.screens.components.JokeItem
+import eu.anifantakis.randomjokes.screens.components.LoadingIndicator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RandomJokesScreen(viewModel: JokesViewModel = koinViewModel()) {
     val jokes = viewModel.nonFavoriteJokes.collectAsStateWithLifecycle(emptyList()).value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle().value
+
+    LoadingIndicator(
+        isLoading = isLoading,
+        isCritical = false
+    )
 
     Column(modifier = Modifier.fillMaxSize()) {
         Button(
