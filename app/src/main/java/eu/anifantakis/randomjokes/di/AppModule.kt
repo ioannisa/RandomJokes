@@ -1,6 +1,7 @@
 package eu.anifantakis.randomjokes.di
 
 import androidx.room.Room
+import eu.anifantakis.randomjokes.GlobalStateHolder
 import eu.anifantakis.randomjokes.database.AppDatabase
 import eu.anifantakis.randomjokes.repository.JokeRepository
 import eu.anifantakis.randomjokes.repository.JokeRepositoryImpl
@@ -47,6 +48,9 @@ val appModule = module {
         ).build()
     }
     single { get<AppDatabase>().jokeDao } // Injecting DAO Singleton
+
+    // Injecting GlobalStateHolder Singleton
+    single<GlobalStateHolder> { GlobalStateHolder() }
 
     // Injecting Repository Singleton
     singleOf(::JokeRepositoryImpl).bind<JokeRepository>()

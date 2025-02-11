@@ -2,6 +2,7 @@ package eu.anifantakis.randomjokes.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import eu.anifantakis.randomjokes.GlobalStateHolder
 import eu.anifantakis.randomjokes.Joke
 import eu.anifantakis.randomjokes.repository.JokeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class JokesViewModel(
-    private val repository: JokeRepository
+    private val repository: JokeRepository,
+    private val globalStateHolder: GlobalStateHolder
 ) : ViewModel() {
     // Expose cached jokes as a StateFlow
 
@@ -29,9 +31,6 @@ class JokesViewModel(
         list.filter { !it.isFavorite }
     }
 
-    private val _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
-
     init {
         viewModelScope.launch {
             repository.getCachedJokes().collect { jokesList ->
@@ -42,13 +41,13 @@ class JokesViewModel(
 
     fun refreshJokes() {
         viewModelScope.launch {
-            _isLoading.value = true  // start loading
+            globalStateHolder.isLoading.value = true
             try {
                 repository.fetchAndStoreRandomJokes()
             } catch (e: Exception) {
                 // Optionally handle or log the error here
             } finally {
-                _isLoading.value = false  // loading finished (either success or error)
+                globalStateHolder.isLoading.value = false
             }
         }
     }
