@@ -6,11 +6,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import eu.anifantakis.randomjokes.screens.FavoriteJokesScreen
+import eu.anifantakis.randomjokes.screens.RandomJokeScreen
 import eu.anifantakis.randomjokes.ui.theme.RandomJokesTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RandomJokesTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    RandomJokesApp(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -31,17 +41,43 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun RandomJokesApp(modifier: Modifier = Modifier) {
+    MaterialTheme {
+        val navController = rememberNavController()
+        Scaffold(
+            bottomBar = { BottomNavigationBar(navController) }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = "random",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable("random") { RandomJokeScreen() }
+                composable("favorites") { FavoriteJokesScreen() }
+            }
+        }
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    RandomJokesTheme {
-        Greeting("Android")
+fun BottomNavigationBar(navController: NavHostController) {
+    NavigationBar {
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Jokes") },
+            label = { Text("Jokes") },
+            selected = currentRoute(navController) == "random",
+            onClick = { navController.navigate("random") }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") },
+            label = { Text("Favorites") },
+            selected = currentRoute(navController) == "favorites",
+            onClick = { navController.navigate("favorites") }
+        )
     }
+}
+
+@Composable
+fun currentRoute(navController: NavHostController): String? {
+    return navController.currentBackStackEntry?.destination?.route
 }

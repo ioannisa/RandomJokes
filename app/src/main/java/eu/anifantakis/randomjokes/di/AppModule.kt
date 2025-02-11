@@ -4,6 +4,7 @@ import androidx.room.Room
 import eu.anifantakis.randomjokes.database.AppDatabase
 import eu.anifantakis.randomjokes.repository.JokeRepository
 import eu.anifantakis.randomjokes.repository.JokeRepositoryImpl
+import eu.anifantakis.randomjokes.screens.JokeViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -15,6 +16,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -49,4 +51,5 @@ val appModule = module {
     // Repository
     singleOf(::JokeRepositoryImpl).bind<JokeRepository>()
 
+    viewModelOf(::JokeViewModel)
 }
